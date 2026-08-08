@@ -26,6 +26,7 @@
     ]
   },
   "scripts": {
+    "inspect-prompt": "bun scripts/inspect-prompt.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
