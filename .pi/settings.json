@@ -1,0 +1,14 @@
+{
+  "packages": [
+    {
+      "source": "git:github.com/zlliang/pi-dispatcher",
+      "autoload": false,
+      "extensions": [
+        "-index.ts"
+      ]
+    },
+    {
+      "source": ".."
+    }
+  ]
+}

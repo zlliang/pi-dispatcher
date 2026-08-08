@@ -1,0 +1,51 @@
+{
+  "name": "pi-dispatcher",
+  "version": "0.1.0",
+  "description": "Pi extension that picks the model and thinking level best suited to each session.",
+  "keywords": [
+    "pi-coding-agent",
+    "pi-package"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zlliang/pi-dispatcher.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "index.ts",
+    "src",
+    "assets",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "defu": "^6.1.7",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": ">=0.84.0",
+    "@earendil-works/pi-ai": ">=0.84.0",
+    "@earendil-works/pi-coding-agent": ">=0.84.0",
+    "@earendil-works/pi-tui": ">=0.84.0",
+    "typebox": "*"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": ">=0.84.0",
+    "@earendil-works/pi-ai": ">=0.84.0",
+    "@earendil-works/pi-coding-agent": ">=0.84.0",
+    "@earendil-works/pi-tui": ">=0.84.0",
+    "@types/node": "*",
+    "typebox": "*",
+    "typescript": "^7.0.2"
+  }
+}
