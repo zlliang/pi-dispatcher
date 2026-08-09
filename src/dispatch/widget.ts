@@ -15,7 +15,7 @@ export function setDispatchingWidget(ctx: ExtensionContext, cancel: () => void, 
         const lines = loader.render(width);
         if (lines[0] === "") lines.shift();
 
-        const loaderLine = `${(lines[0] ?? "").trimEnd()} (${keyHint("app.interrupt", "to cancel")})`;
+        const loaderLine = `${(lines[0] ?? "").trimEnd()} ${theme.fg("muted", "(")}${keyHint("app.interrupt", "to cancel")}${theme.fg("muted", ")")}`;
         const line = `${loaderLine}${warning ? ` ${theme.fg("warning", `(Warning: ${warning})`)}` : ""}`;
         return [truncateToWidth(line, width), ""];
       },

@@ -43,7 +43,9 @@ export class DispatchEntryComponent extends Box {
 
     const label = this.theme.fg("customMessageLabel", this.theme.bold("[dispatch]"));
     const decision = this.theme.fg("customMessageText", formatModel(provider, model, thinkingLevel));
-    const expandHint = !this.expanded && (this.data.decision.reason || this.data.warnings.length > 0) ? ` (${keyHint("app.tools.expand", "to expand")})` : "";
+    const expandHint = !this.expanded && (this.data.decision.reason || this.data.warnings.length > 0)
+      ? ` ${this.theme.fg("muted", "(")}${keyHint("app.tools.expand", "to expand")}${this.theme.fg("muted", ")")}`
+      : "";
     this.addChild(new Text(`${label} ${decision}${expandHint}`, 0, 0));
 
     if (this.expanded && this.data.decision.reason) {
