@@ -3,7 +3,6 @@ import { createAgentSession, SessionManager } from "@earendil-works/pi-coding-ag
 import { resolveCandidates } from "../src/dispatch/candidates";
 import { buildDispatchPrompt, SYSTEM_PROMPT } from "../src/dispatch/prompt";
 import { loadResources } from "../src/resources";
-import { formatModel } from "../src/utils/format";
 
 const { session } = await createAgentSession({
   cwd: process.cwd(),
@@ -22,9 +21,10 @@ try {
     candidates,
     rules,
     cwd: ctx.cwd,
-    currentModel: formatModel(ctx.model?.provider, ctx.model?.id, ctx.thinkingLevel),
+    currentModel: "openai-codex/gpt-5.6-sol:high",
     imageCount: 0,
-    request: "This is an example request",
+    preference: "deepseek/deepseek-v4-flash:max",
+    request: "This is an example request.",
   });
 
   const systemTokens = estimateTokens(SYSTEM_PROMPT);

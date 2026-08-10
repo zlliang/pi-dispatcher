@@ -3,6 +3,7 @@ import { buildDispatchPrompt, SYSTEM_PROMPT } from "./prompt";
 import { resolveCandidates } from "./candidates";
 import { clearDispatchingWidget, setDispatchingWidget } from "./widget";
 import { DISPATCH_ENTRY_TYPE, type DispatchEntryData } from "./entry";
+import { matchesModelPreference, parseMagicInstructions } from "./magic";
 import { formatModel, sanitizeText } from "../utils/format";
 import { completeBackground, resolveModelSettings } from "../utils/model";
 
@@ -10,6 +11,7 @@ import type { ModelThinkingLevel, SimpleStreamOptions, Usage } from "@earendil-w
 import type { BeforeAgentStartEvent, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { DispatchDecision } from "./decision";
 import type { DispatchCandidate } from "./candidates";
+import type { MagicInstruction } from "./magic";
 import type { RuleFile } from "../resources";
 import type { UserConfig } from "../utils/schema";
 import type { ModelSettings } from "../utils/model";
@@ -28,6 +30,7 @@ export class DispatchManager {
   private pi: ExtensionAPI;
   private config: UserConfig;
   private rules: RuleFile[];
+  private pendingInstruction: MagicInstruction | undefined;
   private inflight: AbortController | undefined;
   private attempted = false;
 
@@ -35,6 +38,15 @@ export class DispatchManager {
     this.pi = pi;
     this.config = config;
     this.rules = rules;
+  }
+
+  prepareInput(ctx: ExtensionContext, request: string): string {
+    if (this.attempted || !this.isFirstPrompt(ctx)) return request;
+
+    const parsed = parseMagicInstructions(request);
+    this.pendingInstruction = parsed.instruction;
+
+    return parsed.request;
   }
 
   /**
@@ -48,6 +60,10 @@ export class DispatchManager {
 
     // One attempt per session: a failed dispatch must not bill again on the next prompt.
     this.attempted = true;
+
+    const instruction = this.pendingInstruction;
+    this.pendingInstruction = undefined;
+    if (instruction?.type === "keep") return;
 
     const { candidates, warnings: candidateWarnings } = await resolveCandidates(ctx, this.config.candidates ?? []);
     if (candidates.length === 0) {
@@ -65,13 +81,20 @@ export class DispatchManager {
       const warnings = [...candidateWarnings];
       if (modelSettings.warning) warnings.push(modelSettings.warning);
 
-      const outcome = await this.decideWithLoader(ctx, candidates, event, controller, modelSettings, warnings);
+      const preference = instruction?.preference;
+
+      const outcome = await this.decideWithLoader(ctx, candidates, event, controller, modelSettings, warnings, preference);
       if (controller.signal.aborted || this.inflight !== controller || !outcome) return;
 
       const { decision, candidate, dispatcher } = outcome;
       const thinkingLevel = decision.thinkingLevel;
       const reason = decision.reason ? sanitizeText(decision.reason) : undefined;
       if (!(await this.apply(ctx, candidate, thinkingLevel))) return;
+
+      if (preference && !matchesModelPreference(preference, decision)) {
+        const warning = `Selected ${formatModel(decision.provider, decision.model, thinkingLevel)} does not match model preference ${sanitizeText(preference)}.`;
+        warnings.push(warning);
+      }
 
       this.pi.appendEntry<DispatchEntryData>(DISPATCH_ENTRY_TYPE, {
         decision: {
@@ -112,18 +135,18 @@ export class DispatchManager {
     });
   }
 
-  private async decideWithLoader(ctx: ExtensionContext, candidates: DispatchCandidate[], event: BeforeAgentStartEvent, controller: AbortController, modelSettings: ModelSettings, warnings: string[]): Promise<DispatchOutcome | undefined> {
+  private async decideWithLoader(ctx: ExtensionContext, candidates: DispatchCandidate[], event: BeforeAgentStartEvent, controller: AbortController, modelSettings: ModelSettings, warnings: string[], preference?: string): Promise<DispatchOutcome | undefined> {
     const stopListening = setDispatchingWidget(ctx, () => controller.abort(), warnings.join(" ") || undefined);
 
     try {
-      return await this.decide(ctx, candidates, event, controller.signal, modelSettings);
+      return await this.decide(ctx, candidates, event, controller.signal, modelSettings, preference);
     } finally {
       stopListening();
       clearDispatchingWidget(ctx);
     }
   }
 
-  private async decide(ctx: ExtensionContext, candidates: DispatchCandidate[], event: BeforeAgentStartEvent, signal: AbortSignal, modelSettings: ModelSettings): Promise<DispatchOutcome | undefined> {
+  private async decide(ctx: ExtensionContext, candidates: DispatchCandidate[], event: BeforeAgentStartEvent, signal: AbortSignal, modelSettings: ModelSettings, preference?: string): Promise<DispatchOutcome | undefined> {
     const { model, thinkingLevel } = modelSettings;
 
     const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
@@ -141,6 +164,7 @@ export class DispatchManager {
       cwd: ctx.cwd,
       currentModel: formatModel(ctx.model?.provider, ctx.model?.id, this.pi.getThinkingLevel()),
       imageCount: event.images?.length ?? 0,
+      preference,
       request: event.prompt,
     });
 

@@ -16,6 +16,17 @@ export function registerDispatch(pi: ExtensionAPI): void {
     dispatchManager = new DispatchManager(pi, config, rules);
   });
 
+  // Strip magic instructions before Pi expands and persists the first user request. The manager
+  // keeps the parsed instruction until `before_agent_start` performs (or skips) dispatch.
+  pi.on("input", (event, ctx) => {
+    if (!dispatchManager) return { action: "continue" };
+
+    const request = dispatchManager.prepareInput(ctx, event.text);
+    if (request === event.text) return { action: "continue" };
+
+    return { action: "transform", text: request, images: event.images };
+  });
+
   // Dispatch before the session's first request, so the whole session runs on one model and no
   // prompt cache is built for a model that is about to be replaced.
   pi.on("before_agent_start", async (event, ctx) => {

@@ -70,13 +70,26 @@ Add personal guidance to `~/.pi/agent/dispatcher.rules.md` and the current proje
 
 Do not include prices or model specifications in the rules. pi-dispatcher reads them from Pi's model registry.
 
+## Magic instructions
+
+Add a magic instruction anywhere in the first request to control dispatch:
+
+| Instruction | Behavior |
+| --- | --- |
+| `%keep` or `%model keep` | Keeps the current model and thinking level without calling the dispatcher. |
+| `%model <preference>` | Strongly prefers a matching model, optionally with a thinking level, such as `%model sonnet`, `%model gpt-5.6:high`, or `%model openai-codex/gpt-5.6-sol:xhigh`. |
+
+A preference is advisory: the dispatcher may choose differently when capability, risk, dispatch rules, or availability justify it. Model matching is case-insensitive and accepts model-family fragments, so `gpt` and `gpt-5.6` both match `openai-codex/gpt-5.6-sol`; an explicitly requested thinking level must match exactly.
+
+Magic instructions are removed before Pi expands the request, saves the user message, or sends it to the selected model. If a request contains multiple model preferences, the last one wins; a `keep` instruction overrides all preferences.
+
 ## How it works
 
 For the first request in a new session, pi-dispatcher:
 
 1. Resolves the configured candidates and their available thinking levels.
-2. Sends the candidates, rules, session metadata, and initial request to the dispatcher model.
+2. Sends the candidates, rules, session metadata, optional model preference, and initial request to the dispatcher model.
 3. Applies the returned model and thinking level.
 4. Adds a dispatch entry to the session with the decision and reason.
 
-Dispatch runs only once per session. A missing model, invalid response, timeout, error, or cancellation keeps the current model.
+Dispatch runs only once per session. A `keep` instruction, missing model, invalid response, timeout, error, or cancellation keeps the current model.
