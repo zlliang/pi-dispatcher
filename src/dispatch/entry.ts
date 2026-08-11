@@ -13,6 +13,7 @@ export type DispatchEntryData = {
   decision: DispatchDecision;
   dispatcher: ModelConfig;
   candidates: CandidateConfig[];
+  preference?: string;
   warnings: string[];
   usage: Usage | undefined;
 };
@@ -47,6 +48,11 @@ export class DispatchEntryComponent extends Box {
       ? ` ${this.theme.fg("muted", "(")}${keyHint("app.tools.expand", "to expand")}${this.theme.fg("muted", ")")}`
       : "";
     this.addChild(new Text(`${label} ${decision}${expandHint}`, 0, 0));
+
+    if (this.expanded && this.data.preference) {
+      this.addChild(new Spacer(1));
+      this.addChild(new Text(this.theme.fg("customMessageLabel", "Preference: ") + this.theme.fg("customMessageText", this.data.preference), 0, 0));
+    }
 
     if (this.expanded && this.data.decision.reason) {
       this.addChild(new Spacer(1));

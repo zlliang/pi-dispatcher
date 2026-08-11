@@ -110,6 +110,7 @@ export class DispatchManager {
           thinkingLevels: entry.thinkingLevels,
           hint: entry.hint,
         })),
+        preference,
         warnings,
         usage: outcome.usage,
       });
