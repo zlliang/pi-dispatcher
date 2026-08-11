@@ -1,6 +1,6 @@
 {
   "name": "pi-dispatcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pi extension that picks the model and thinking level best suited to each session.",
   "keywords": [
     "pi-coding-agent",
