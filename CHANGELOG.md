@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1](https://github.com/zlliang/pi-dispatcher/compare/v0.2.0...v0.2.1) (2026-09-04)
+
+
+### Miscellaneous Chores
+
+* trigger release 0.2.1 ([780729d](https://github.com/zlliang/pi-dispatcher/commit/780729d10ffbbfeb984de52e6b1cd81a451db3e3))
+
 ## [0.2.0](https://github.com/zlliang/pi-dispatcher/compare/v0.1.0...v0.2.0) (2026-08-11)
 
 
