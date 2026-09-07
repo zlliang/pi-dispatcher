@@ -50,7 +50,7 @@ export class DispatchManager {
   }
 
   /**
-   * Dispatch the session once, before its first request.
+   * Dispatches the session once, before its first request.
    *
    * Everything here fails open: on a bad config, an unavailable dispatcher model, a timeout, or an
    * unrecognized answer, the session simply keeps the model the user already had.

@@ -44,7 +44,7 @@ type DispatchPromptInput = {
 };
 
 /**
- * Build the dispatch request. Stable blocks (candidates, rules) come first and volatile blocks
+ * Builds the dispatch request. Stable blocks (candidates, rules) come first and volatile blocks
  * (session, preference, request) last, so repeated dispatch calls share a prefix.
  */
 export function buildDispatchPrompt(input: DispatchPromptInput): string {

@@ -23,7 +23,7 @@ type ResolvedCandidates = {
 const cache = new Map<string, ResolvedCandidates>();
 
 /**
- * Expand configured entries into concrete candidates, dropping everything this session cannot run.
+ * Expands configured entries into concrete candidates, dropping everything this session cannot run.
  * Configured thinking levels are clamped to the model and duplicates collapse; omitted levels
  * default to every level supported by the model.
  */

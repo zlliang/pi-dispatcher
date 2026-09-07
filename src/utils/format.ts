@@ -4,7 +4,7 @@ export function formatModel(provider?: ProviderId | string, model?: string, thin
   return provider && model ? `${provider}/${model}${thinkingLevel ? `:${thinkingLevel}` : ""}` : "no-model";
 }
 
-/** Replace newlines, tabs, carriage returns with space, then collapse multiple spaces. */
+/** Replaces newlines, tabs, and carriage returns with spaces, then collapses multiple spaces. */
 export function sanitizeText(text: string): string {
   return text
     .replace(/[\r\n\t]/g, " ")

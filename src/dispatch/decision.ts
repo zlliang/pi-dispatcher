@@ -16,7 +16,7 @@ type ParsedDecision = {
 };
 
 /**
- * Parse the dispatcher model's reply into a decision.
+ * Parses the dispatcher model's reply into a decision.
  *
  * Only configured model and thinking level pairs are accepted, so hallucinated or prompt-injected
  * settings can never be applied.

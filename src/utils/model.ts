@@ -26,7 +26,7 @@ type ThinkingLevelSelection = {
   warning: string | undefined;
 };
 
-/** Complete a one-shot background request, using an isolated session for OpenAI Codex models. */
+/** Completes a one-shot background request, using an isolated session for OpenAI Codex models. */
 export const completeBackground: typeof completeSimple = async (model, context, options) => {
   if (model.api !== "openai-codex-responses") return completeSimple(model, context, options);
 
@@ -40,7 +40,7 @@ export const completeBackground: typeof completeSimple = async (model, context, 
 };
 
 /**
- * Resolve the model and thinking level for a background feature (recap, title, ...).
+ * Resolves the model and thinking level for a background feature (recap, title, ...).
  *
  * `feature` names the config section so warnings can point at the offending fields. When the
  * feature's model config is incomplete or unavailable, this falls back to the session's main
@@ -66,8 +66,8 @@ export async function resolveModelSettings(ctx: ExtensionContext, config: Option
 }
 
 /**
- * Resolve a configured model for a feature, including credential availability. When resolution
- * fails, return the fallback model if one was provided and explain whether the configured model
+ * Resolves a configured model for a feature, including credential availability. When resolution
+ * fails, returns the fallback model if one was provided and explains whether the configured model
  * was replaced or omitted.
  */
 export async function resolveModel(ctx: ExtensionContext, config: OptionalModelConfig, feature: string, fallbackModel?: Model<Api>): Promise<ModelSelection> {

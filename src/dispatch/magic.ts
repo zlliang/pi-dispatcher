@@ -13,12 +13,12 @@ type ParsedRequest = {
 };
 
 /**
- * Match standalone `%keep` or `%model <preference>` instructions. The capture group contains the
+ * Matches standalone `%keep` or `%model <preference>` instructions. The capture group contains the
  * non-whitespace model preference; optional trailing horizontal space is consumed for clean removal.
  */
 const MAGIC_INSTRUCTION_PATTERN = /(?<!\S)%(?:keep(?=$|\s)|model[ \t]+(\S+))(?:[ \t]+(?=\S))?/g;
 
-/** Parse and remove dispatcher instructions from the first user request. */
+/** Parses and removes dispatcher instructions from the first user request. */
 export function parseMagicInstructions(request: string): ParsedRequest {
   let instruction: MagicInstruction | undefined;
   let matched = false;
@@ -43,7 +43,7 @@ export function parseMagicInstructions(request: string): ParsedRequest {
   };
 }
 
-/** Match the provider exactly, the model as a family fragment, and the thinking level exactly. */
+/** Matches the provider exactly, the model as a family fragment, and the thinking level exactly. */
 export function matchesModelPreference(preference: string, selection: ModelConfig): boolean {
   const parsed = splitModelPreference(preference);
 

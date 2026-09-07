@@ -23,7 +23,7 @@ type Resources = {
 
 const cache = new Map<string, Resources>();
 
-/** Load config and rules once per session lifecycle; later calls return the cached result. */
+/** Loads config and rules once per session lifecycle; later calls return the cached result. */
 export function loadResources(ctx: ExtensionContext): Resources {
   const cached = cache.get(ctx.cwd);
   if (cached) return cached;
