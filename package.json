@@ -13,12 +13,12 @@
   "license": "MIT",
   "type": "module",
   "files": [
-    "index.ts",
-    "src",
     "assets",
+    "src",
     "CHANGELOG.md",
-    "README.md",
-    "LICENSE.md"
+    "index.ts",
+    "LICENSE.md",
+    "README.md"
   ],
   "pi": {
     "extensions": [
