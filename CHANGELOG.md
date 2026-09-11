@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2](https://github.com/zlliang/pi-dispatcher/compare/v0.2.1...v0.2.2) (2026-09-11)
+
+
+### Bug Fixes
+
+* **dispatch:** clarify current model is not a preference ([b4678f9](https://github.com/zlliang/pi-dispatcher/commit/b4678f9d1e4fe291fde01e4d33564dc2a3f3557e))
+
 ## [0.2.1](https://github.com/zlliang/pi-dispatcher/compare/v0.2.0...v0.2.1) (2026-09-04)
 
 
