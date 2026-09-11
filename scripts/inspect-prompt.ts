@@ -21,9 +21,9 @@ try {
     candidates,
     rules,
     cwd: ctx.cwd,
-    currentModel: "openai-codex/gpt-5.6-sol:high",
+    currentModel: "openai-codex/gpt-6-astra:high",
     imageCount: 0,
-    preference: "deepseek/deepseek-v4-flash:max",
+    preference: "deepseek/deepseek-flash:max",
     request: "This is an example request.",
   });
 
