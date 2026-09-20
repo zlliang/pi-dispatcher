@@ -7,7 +7,7 @@ import { matchesModelPreference, parseMagicInstructions } from "./magic";
 import { formatModel, sanitizeText } from "../utils/format";
 import { completeBackground, resolveModelSettings } from "../utils/model";
 
-import type { ModelThinkingLevel, SimpleStreamOptions, Usage } from "@earendil-works/pi-ai";
+import type { ModelThinkingLevel, Usage } from "@earendil-works/pi-ai";
 import type { BeforeAgentStartEvent, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import type { DispatchDecision } from "./decision";
 import type { DispatchCandidate } from "./candidates";
@@ -150,15 +150,6 @@ export class DispatchManager {
   private async decide(ctx: ExtensionContext, candidates: DispatchCandidate[], event: BeforeAgentStartEvent, signal: AbortSignal, modelSettings: ModelSettings, preference?: string): Promise<DispatchOutcome | undefined> {
     const { model, thinkingLevel } = modelSettings;
 
-    const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
-    if (!auth.ok) throw new Error(auth.error);
-
-    const options: SimpleStreamOptions = { maxTokens: MAX_TOKENS, timeoutMs: TIMEOUT_MS, signal };
-    if (auth.apiKey) options.apiKey = auth.apiKey;
-    if (auth.headers) options.headers = auth.headers;
-    if (auth.env) options.env = auth.env;
-    if (thinkingLevel !== "off") options.reasoning = thinkingLevel;
-
     const prompt = buildDispatchPrompt({
       candidates,
       rules: this.rules,
@@ -169,14 +160,19 @@ export class DispatchManager {
       request: event.prompt,
     });
 
-    const response = await completeBackground(model, {
+    const response = await completeBackground(ctx, model, {
       systemPrompt: SYSTEM_PROMPT,
       messages: [{
         role: "user",
         content: [{ type: "text", text: prompt }],
         timestamp: Date.now(),
       }],
-    }, options);
+    }, {
+      maxTokens: MAX_TOKENS,
+      timeoutMs: TIMEOUT_MS,
+      signal,
+      reasoning: thinkingLevel === "off" ? undefined : thinkingLevel,
+    });
 
     if (response.stopReason === "error") {
       throw new Error(response.errorMessage ?? "Dispatch request failed");
