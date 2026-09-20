@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0](https://github.com/zlliang/pi-dispatcher/compare/v0.2.2...v0.3.0) (2026-09-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* Require Pi 0.86.0 or later.
+
+### Features
+
+* use Pi 0.86 for background model calls ([aed4a57](https://github.com/zlliang/pi-dispatcher/commit/aed4a57d970c24440322387b3d2571227309f6a6))
+
 ## [0.2.2](https://github.com/zlliang/pi-dispatcher/compare/v0.2.1...v0.2.2) (2026-09-11)
 
 
