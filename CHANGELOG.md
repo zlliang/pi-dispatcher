@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0](https://github.com/zlliang/pi-dispatcher/compare/v0.3.0...v0.4.0) (2026-09-22)
+
+
+### Build System
+
+* enable JSON module resolution ([3397c72](https://github.com/zlliang/pi-dispatcher/commit/3397c72bdd804e35f8f8559bdfdd2f528b35e637))
+
 ## [0.3.0](https://github.com/zlliang/pi-dispatcher/compare/v0.2.2...v0.3.0) (2026-09-20)
 
 
