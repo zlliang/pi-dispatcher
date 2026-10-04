@@ -1,5 +1,10 @@
 # pi-dispatcher
 
+> [!WARNING]
+> pi-dispatcher is no longer maintained and does not work with Pi 1.0 or later. This repository is archived and the pi-dispatcher [npm package](https://www.npmjs.com/package/pi-dispatcher) is deprecated.
+>
+> Pi 1.0 supports model routing natively: extensions can register [virtual models](https://pi.dev/docs/latest/virtual-models) that route each request to a different model, as in the [`jev-router.ts`](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/examples/extensions/jev-router.ts) example.
+
 [Pi](https://pi.dev/) extension that picks the model and thinking level best suited to each session.
 
 pi-dispatcher runs before the first request, asks a dispatcher model to choose from your configured model candidates, then switches Pi to that choice. It considers model capabilities, pricing, your candidate hints, and optional dispatch rules. It dispatches only once, so it doesn’t disrupt your prompt cache.
